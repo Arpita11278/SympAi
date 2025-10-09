@@ -1,0 +1,6 @@
+[theme]
+primaryColor = "#bd8c7d"              # Rose Gold for buttons / accents
+backgroundColor = "#d1bfa7"           # Soft Gold as main background
+secondaryBackgroundColor = "#8e8e90"  # Silver for sidebar/cards
+textColor = "#49494b"                 # Onyx for readable text
+font = "sans serif"

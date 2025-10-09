@@ -1,0 +1,6 @@
+[theme]
+primaryColor = "#8458B3"            # Purple Pain - buttons, highlights
+backgroundColor = "#e5eaf5"         # Freeze Purple - page background
+secondaryBackgroundColor = "#d0bdf4"  # Medium Purple - sidebar/cards
+textColor = "#311b92"               # Dark indigo for good readability
+font = "sans serif"

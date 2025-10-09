@@ -1,0 +1,6 @@
+[theme]
+primaryColor = "#FF6F61"          # Buttons, highlights
+backgroundColor = "#1E1E2E"       # Main background
+secondaryBackgroundColor = "#2D2D44" 
+textColor = "#FFFFFF"             # White text
+font = "sans serif"
