@@ -5,7 +5,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import LabelEncoder
 import joblib, os
 
-# ---------- Custom CSS ----------
+# Custom CSS 
 st.markdown(
     """
     <style>
@@ -38,12 +38,12 @@ st.markdown(
     }
     </style>
 
-    <h1 class="centered-title">🩺 Virtual Disease Predictor</h1>
+    <h1 class="centered-title">⚕️SympAI- Virtual Disease Predictor</h1>
     """,
     unsafe_allow_html=True
 )
 
-# ---------- Page Config ----------
+# Page Config 
 st.set_page_config(
     page_title="Virtual Disease Predictor",
     page_icon="🩺",
@@ -51,7 +51,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# ---------- File Paths ----------
+# File Paths 
 DATA_DIR = os.path.join(os.path.dirname(__file__), "sample_datasets")
 DATASET = os.path.join(DATA_DIR, "dataset.csv")
 DESC = os.path.join(DATA_DIR, "symptom_description.csv")
@@ -60,7 +60,7 @@ SEV = os.path.join(DATA_DIR, "symptom_severity.csv")
 MODEL_PATH = os.path.join(DATA_DIR, "model.pkl")
 VOCAB_PATH = os.path.join(DATA_DIR, "symptom_vocab.pkl")
 
-# ---------- Load CSVs ----------
+# Load CSVs 
 @st.cache_data
 def load_csvs():
     df = pd.read_csv(DATASET)
@@ -69,7 +69,7 @@ def load_csvs():
     sev = pd.read_csv(SEV)
     return df, desc, prec, sev
 
-# ---------- Build Vocab ----------
+# Build Vocab
 def build_vocab(df):
     symptom_cols = [c for c in df.columns if c.startswith("Symptom_")]
     vocab = sorted(set(
@@ -79,12 +79,12 @@ def build_vocab(df):
     ))
     return vocab
 
-# ---------- Vectorize ----------
+# Vectorize
 def vectorize(symptoms_selected, vocab):
     sset = set([s.strip().lower().replace(" ", "_") for s in symptoms_selected if s])
     return np.array([1 if v in sset else 0 for v in vocab], dtype=int)
 
-# ---------- Train or Load ----------
+# Train or Load 
 def train_or_load(df, vocab):
     if os.path.exists(MODEL_PATH) and os.path.exists(VOCAB_PATH):
         model = joblib.load(MODEL_PATH)
@@ -109,7 +109,7 @@ def train_or_load(df, vocab):
     joblib.dump(le, os.path.join(DATA_DIR, "label_encoder.pkl"))
     return model, le
 
-# ---------- Prediction Helper ----------
+# Prediction Helper 
 def get_topk(model, x_vec, le, k=3):
     if hasattr(model, "predict_proba"):
         proba = model.predict_proba([x_vec])[0]
@@ -118,7 +118,7 @@ def get_topk(model, x_vec, le, k=3):
     pred_idx = model.predict([x_vec])[0]
     return [(le.inverse_transform([pred_idx])[0], 1.0)]
 
-# ---------- UI ----------
+# UI 
 # Load custom CSS
 with open("style.css") as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
@@ -143,7 +143,7 @@ for i in range(num_symptoms):
         if selected_symptom != "-- Select a Symptom --":
             user_syms.append(selected_symptom)
 
-# ---------- Prediction ----------
+# Prediction
 if st.button("Predict"):
     if not user_syms:
         st.warning("Please select at least 1 symptom.")
@@ -152,7 +152,7 @@ if st.button("Predict"):
     model, le = train_or_load(df, vocab)
     x_vec = vectorize(user_syms, vocab)
 
-    # ✅ Always fetch top-3
+    # Always fetch top-3
     results = get_topk(model, x_vec, le, k=3)
 
     # Best match
@@ -179,14 +179,14 @@ if st.button("Predict"):
     else:
         st.markdown("- Drink more water\n- Rest well\n- Consult a doctor if symptoms persist")
 
-    # ✅ Always show Top-3 list
+    #  Always show Top-3 list
     if len(results) > 1:
         st.write("---")
         st.subheader("🔮 Top 3 Predictions")
         for d, p in results:
             st.write(f"- {d}: {p:.2%}")
 
-# ---------- Footer ----------
+#  Footer 
 st.markdown(
     """
     <style>
@@ -202,9 +202,6 @@ st.markdown(
         padding: 5px;
     }
     </style>
-    <div class="footer">
-        Replace sample CSVs in <code>sample_datasets/</code> with your own larger dataset.
-    </div>
     """,
     unsafe_allow_html=True
 )
