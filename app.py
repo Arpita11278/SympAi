@@ -9,44 +9,60 @@ import joblib, os
 st.markdown(
     """
     <style>
-    /* Title center */
+
     .centered-title {
         text-align: center;
-        font-size: 32px;
-        font-weight: bold;
-        color: #311b92;
-        margin-bottom: 20px;
+        font-size: 42px;
+        font-weight: 800;
+        color: #F3E8FF;
+        font-family: 'Poppins', sans-serif;
+
+        margin-top: 10px;
+        margin-bottom: 30px;
+
+        text-shadow:
+            0 0 10px rgba(168,85,247,0.7),
+            0 0 20px rgba(168,85,247,0.5);
     }
 
-    /* Label (Symptom 1, Symptom 2, ...) */
+    /* Labels */
     label[data-baseweb="label"] {
-        font-size: 16px !important;   /* label thoda bada */
-        font-weight: 500 !important;  /* halka bold */
-        color: inherit !important;    /* default Streamlit color */
+        font-size: 16px !important;
+        font-weight: 500 !important;
+        color: white !important;
     }
 
-    /* Dropdown ke andar ka selected text */
+    /* Dropdown box */
     div[data-baseweb="select"] > div {
-        font-size: 12px !important;   /* chhota font */
-        color: black !important;      /* black text */
+        font-size: 13px !important;
+        color: white !important;
+
+        background-color: #2B1E45 !important;
+        border: 1px solid #A855F7 !important;
+        border-radius: 10px !important;
     }
 
-    /* Dropdown khulte time list ke options */
+    /* Dropdown options */
     ul[role="listbox"] li {
-        font-size: 12px !important;   /* chhota font */
-        color: black !important;      /* black text */
+        font-size: 13px !important;
+        color: white !important;
+        background-color: #1E1633 !important;
     }
+
     </style>
 
-    <h1 class="centered-title">⚕️SympAI- Virtual Disease Predictor</h1>
+    <h1 class="centered-title">
+        ⚕️ SympAI - Virtual Disease Predictor
+    </h1>
+
     """,
     unsafe_allow_html=True
 )
 
 # Page Config 
 st.set_page_config(
-    page_title="Virtual Disease Predictor",
-    page_icon="🩺",
+    page_title="SympAI-Virtual Disease Predictor",
+    page_icon="⚕️",
     layout="wide",
     initial_sidebar_state="expanded"
 )
