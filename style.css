@@ -1,17 +1,12 @@
-/* 🌈 Gradient Background */
 .stApp {
-    background: linear-gradient(135deg, #add5eb, #dee6f9, #d4c2f3);
+    background: linear-gradient(135deg, #3e264b, #120F1F,#1E1633,#2A1458);
 }
-
-/* 🟪 Sidebar Style */
 [data-testid="stSidebar"] {
-    background-color: #8458B3 !important;
+    background-color: #1B132D !important;
     border-radius: 12px;
     color: white !important;
     box-shadow: 0px 4px 15px rgba(0,0,0,0.2);
 }
-
-/* 🔘 Buttons */
 .stButton>button {
     background: linear-gradient(45deg, #8458B3, #cfb7fc);
     color: white;
@@ -25,10 +20,8 @@
     transform: scale(1.05);
     background: linear-gradient(45deg, #a0d2eb, #8458B3);
 }
-
-/* ✨ Headings */
 h1, h2, h3 {
-    color: #49494b;
+    color: #F3E8FF;;
     text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
     font-family: "Trebuchet MS", sans-serif;
 }
