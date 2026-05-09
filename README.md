@@ -1,4 +1,5 @@
-# Virtual Disease Predictor (Streamlit)
+# SympAi 
+(Streamlit)
 
 ## Run
 ```bash
