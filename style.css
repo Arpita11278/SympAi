@@ -1,27 +1,174 @@
 .stApp {
     background: linear-gradient(135deg, #3e264b, #120F1F,#1E1633,#2A1458);
 }
+
 [data-testid="stSidebar"] {
     background-color: #1B132D !important;
     border-radius: 12px;
     color: white !important;
     box-shadow: 0px 4px 15px rgba(0,0,0,0.2);
 }
+
+/* ===========================
+   BUTTON
+=========================== */
+
 .stButton>button {
     background: linear-gradient(45deg, #8458B3, #cfb7fc);
     color: white;
     border-radius: 10px;
     border: none;
-    padding: 8px 20px;
+    padding: 10px 32px;
     font-weight: bold;
+    font-size: 16px;
     transition: 0.3s;
+    box-shadow: 0 0 15px rgba(168,85,247,0.35);
 }
+
 .stButton>button:hover {
     transform: scale(1.05);
     background: linear-gradient(45deg, #a0d2eb, #8458B3);
+    box-shadow: 0 0 25px rgba(168,85,247,0.6);
 }
+
+/* Center the Predict button and give it some breathing room */
+div[data-testid="stButton"] {
+    display: flex;
+    justify-content: center;
+    margin: 2rem 0 3rem 0;
+}
+
+/* ===========================
+   HEADINGS
+=========================== */
+
 h1, h2, h3 {
-    color: #F3E8FF;;
+    color: #fae8ff;
     text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
     font-family: "Trebuchet MS", sans-serif;
+}
+
+/* ===========================
+   DROPDOWNS (selectbox)
+=========================== */
+
+div[data-baseweb="select"] > div {
+    background-color: #2B1E45 !important;
+    border: 1px solid rgba(168,85,247,0.5) !important;
+    border-radius: 10px !important;
+    transition: 0.25s;
+}
+
+div[data-baseweb="select"] > div:hover {
+    border: 1px solid #A855F7 !important;
+    box-shadow: 0 0 10px rgba(168,85,247,0.35);
+}
+
+/* Focused / open dropdown gets a stronger glow so it reads clearly against the purple background */
+div[data-baseweb="select"]:focus-within > div {
+    border: 1px solid #cfb7fc !important;
+    box-shadow: 0 0 15px rgba(168,85,247,0.6);
+}
+
+ul[role="listbox"] li {
+    background-color: #1E1633 !important;
+}
+
+ul[role="listbox"] li:hover {
+    background-color: #3e2a63 !important;
+}
+
+/* ===========================
+   PROGRESS BAR
+=========================== */
+
+/* Streamlit's progress bar track + fill; selector targets the inner fill div */
+.stProgress > div > div > div > div {
+    background-image: linear-gradient(90deg, #8458B3, #cfb7fc) !important;
+}
+
+.stProgress > div > div > div {
+    background-color: rgba(255,255,255,0.08) !important;
+    border-radius: 20px;
+}
+
+/* ===========================
+   LABELS
+=========================== */
+
+label[data-baseweb="label"] {
+    color: #cfb7fc !important;
+    font-weight: 500 !important;
+}
+
+/* ===========================
+   SYMPTOM CARD CONTAINER
+=========================== */
+
+/* Targets the bordered st.container() wrapping the symptom grid */
+div[data-testid="stVerticalBlockBorderWrapper"] {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(168,85,247,0.3) !important;
+    border-radius: 20px !important;
+    padding: 1.5rem 1rem;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 25px rgba(168,85,247,0.12);
+}
+
+/* ===========================
+   FOOTER
+=========================== */
+
+footer {
+    visibility: hidden;
+}
+
+footer:after {
+    content: 'Built with Streamlit ⚡ SympAI';
+    visibility: visible;
+    display: block;
+    position: relative;
+    text-align: center;
+    color: #cfb7fc;
+    padding: 12px;
+    font-size: 13px;
+    background: transparent;
+}
+
+/* ===========================
+   PREDICT BUTTON GLOW PULSE
+=========================== */
+
+@keyframes predictPulse {
+    0%   { box-shadow: 0 0 15px rgba(168,85,247,0.35); }
+    50%  { box-shadow: 0 0 30px rgba(168,85,247,0.75); }
+    100% { box-shadow: 0 0 15px rgba(168,85,247,0.35); }
+}
+
+.stButton>button {
+    animation: predictPulse 2.5s ease-in-out infinite;
+}
+
+.stButton>button:hover {
+    animation: none;
+}
+
+
+/* ===========================
+   RESULT CARD
+=========================== */
+
+.result-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(168,85,247,0.35);
+    border-radius: 16px;
+    padding: 1.6rem 2rem;
+    margin: 1rem 0;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 20px rgba(168,85,247,0.15);
+}
+
+.result-title {
+    margin: 0 !important;
+    font-size: 28px !important;
 }

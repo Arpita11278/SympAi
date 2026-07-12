@@ -5,7 +5,28 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import LabelEncoder
 import joblib, os
 
-# Custom CSS 
+# Page Config — MUST be the first Streamlit command in the script,
+# before any st.markdown / st.write / etc, or Streamlit will either
+# error out or silently ignore layout/sidebar settings.
+st.set_page_config(
+    page_title="SympAI-Virtual Disease Predictor",
+    page_icon="⚕️",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
+# File Paths
+BASE_DIR = os.path.dirname(__file__)
+DATA_DIR = os.path.join(BASE_DIR, "sample_datasets")
+DATASET = os.path.join(DATA_DIR, "dataset.csv")
+DESC = os.path.join(DATA_DIR, "symptom_description.csv")
+PREC = os.path.join(DATA_DIR, "symptom_precaution.csv")
+SEV = os.path.join(DATA_DIR, "symptom_severity.csv")
+MODEL_PATH = os.path.join(DATA_DIR, "model.pkl")
+VOCAB_PATH = os.path.join(DATA_DIR, "symptom_vocab.pkl")
+STYLE_PATH = os.path.join(BASE_DIR, "style.css")  # resolved relative to this file, not the CWD
+
+# Custom CSS + Title
 st.markdown(
     """
     <style>
@@ -59,24 +80,16 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# Page Config 
-st.set_page_config(
-    page_title="SympAI-Virtual Disease Predictor",
-    page_icon="⚕️",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
+# Load external stylesheet (fails loudly and clearly instead of silently
+# breaking the theme if the file is missing)
+if os.path.exists(STYLE_PATH):
+    with open(STYLE_PATH) as f:
+        st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+else:
+    st.warning(f"style.css not found at {STYLE_PATH} — theming will look incomplete.")
 
-# File Paths 
-DATA_DIR = os.path.join(os.path.dirname(__file__), "sample_datasets")
-DATASET = os.path.join(DATA_DIR, "dataset.csv")
-DESC = os.path.join(DATA_DIR, "symptom_description.csv")
-PREC = os.path.join(DATA_DIR, "symptom_precaution.csv")
-SEV = os.path.join(DATA_DIR, "symptom_severity.csv")
-MODEL_PATH = os.path.join(DATA_DIR, "model.pkl")
-VOCAB_PATH = os.path.join(DATA_DIR, "symptom_vocab.pkl")
 
-# Load CSVs 
+# Load CSVs
 @st.cache_data
 def load_csvs():
     df = pd.read_csv(DATASET)
@@ -100,7 +113,7 @@ def vectorize(symptoms_selected, vocab):
     sset = set([s.strip().lower().replace(" ", "_") for s in symptoms_selected if s])
     return np.array([1 if v in sset else 0 for v in vocab], dtype=int)
 
-# Train or Load 
+# Train or Load
 def train_or_load(df, vocab):
     if os.path.exists(MODEL_PATH) and os.path.exists(VOCAB_PATH):
         model = joblib.load(MODEL_PATH)
@@ -125,7 +138,7 @@ def train_or_load(df, vocab):
     joblib.dump(le, os.path.join(DATA_DIR, "label_encoder.pkl"))
     return model, le
 
-# Prediction Helper 
+# Prediction Helper
 def get_topk(model, x_vec, le, k=3):
     if hasattr(model, "predict_proba"):
         proba = model.predict_proba([x_vec])[0]
@@ -134,11 +147,7 @@ def get_topk(model, x_vec, le, k=3):
     pred_idx = model.predict([x_vec])[0]
     return [(le.inverse_transform([pred_idx])[0], 1.0)]
 
-# UI 
-# Load custom CSS
-with open("style.css") as f:
-    st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
-
+# UI
 df, desc_df, prec_df, sev_df = load_csvs()
 vocab = build_vocab(df)
 
@@ -146,18 +155,21 @@ num_symptoms = 12
 
 # Dropdowns
 symptom_options = ["-- Select a Symptom --"] + vocab
-cols = st.columns(3)
+symptom_icons = ["🤒", "🤕", "🥵", "🤢", "😷", "🥴"]
 user_syms = []
 
-for i in range(num_symptoms):
-    with cols[i % 3]:
-        selected_symptom = st.selectbox(
-            f"Symptom {i+1}",
-            symptom_options,
-            key=f"s{i}"
-        )
-        if selected_symptom != "-- Select a Symptom --":
-            user_syms.append(selected_symptom)
+with st.container(border=True):
+    cols = st.columns(3)
+    for i in range(num_symptoms):
+        with cols[i % 3]:
+            icon = symptom_icons[i % len(symptom_icons)]
+            selected_symptom = st.selectbox(
+                f"{icon} Symptom {i+1}",
+                symptom_options,
+                key=f"s{i}"
+            )
+            if selected_symptom != "-- Select a Symptom --":
+                user_syms.append(selected_symptom)
 
 # Prediction
 if st.button("Predict"):
@@ -184,10 +196,18 @@ if st.button("Predict"):
             if c in row and pd.notna(row[c]) and str(row[c]).strip():
                 prec_list.append(str(row[c]))
 
-    # Main result
-    st.subheader(f"Prediction: {best_disease}")
+    # Main result — wrapped in a card so it doesn't look like bare text
+    st.markdown(f"""
+    <div class="result-card">
+        <h2 class="result-title">🩺 Prediction: {best_disease}</h2>
+    </div>
+    """, unsafe_allow_html=True)
+
     st.progress(min(1.0, max(0.0, best_prob)))
-    st.write(desc)
+    st.caption(f"Confidence: {best_prob:.1%}")
+
+    st.markdown(f"""<div class="result-card">{desc}</div>""", unsafe_allow_html=True)
+
     st.write("**Precautions / Advice:**")
     if prec_list:
         for p in prec_list:
@@ -201,23 +221,3 @@ if st.button("Predict"):
         st.subheader("🔮 Top 3 Predictions")
         for d, p in results:
             st.write(f"- {d}: {p:.2%}")
-
-#  Footer 
-st.markdown(
-    """
-    <style>
-    .footer {
-        position: fixed;
-        left: 0;
-        bottom: 0;
-        width: 100%;
-        background-color: transparent;
-        text-align: center;
-        color: gray;
-        font-size: 13px;
-        padding: 5px;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
