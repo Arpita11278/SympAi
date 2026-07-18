@@ -10,7 +10,6 @@ import joblib, os
 # error out or silently ignore layout/sidebar settings.
 st.set_page_config(
     page_title="SympAI-Virtual Disease Predictor",
-    page_icon="⚕️",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -33,41 +32,18 @@ st.markdown(
 
     .centered-title {
         text-align: center;
-        font-size: 42px;
-        font-weight: 800;
-        color: #F3E8FF;
+        font-size: 54px;
+        font-weight: 900;
         font-family: 'Poppins', sans-serif;
+        
+        background: linear-gradient(135deg, #9333EA, #D946EF);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        filter: drop-shadow(0 0 15px rgba(217, 70, 239, 0.6));
 
-        margin-top: 10px;
-        margin-bottom: 30px;
-
-        text-shadow:
-            0 0 10px rgba(168,85,247,0.7),
-            0 0 20px rgba(168,85,247,0.5);
-    }
-
-    /* Labels */
-    label[data-baseweb="label"] {
-        font-size: 16px !important;
-        font-weight: 500 !important;
-        color: white !important;
-    }
-
-    /* Dropdown box */
-    div[data-baseweb="select"] > div {
-        font-size: 13px !important;
-        color: white !important;
-
-        background-color: #2B1E45 !important;
-        border: 1px solid #A855F7 !important;
-        border-radius: 10px !important;
-    }
-
-    /* Dropdown options */
-    ul[role="listbox"] li {
-        font-size: 13px !important;
-        color: white !important;
-        background-color: #1E1633 !important;
+        margin-top: 0px;
+        margin-bottom: 20px;
+        letter-spacing: 1.5px;
     }
 
     </style>
@@ -155,21 +131,20 @@ num_symptoms = 12
 
 # Dropdowns
 symptom_options = ["-- Select a Symptom --"] + vocab
-symptom_icons = ["🤒", "🤕", "🥵", "🤢", "😷", "🥴"]
 user_syms = []
 
-with st.container(border=True):
-    cols = st.columns(3)
+with st.container():
+    cols = st.columns(4)
     for i in range(num_symptoms):
-        with cols[i % 3]:
-            icon = symptom_icons[i % len(symptom_icons)]
-            selected_symptom = st.selectbox(
-                f"{icon} Symptom {i+1}",
-                symptom_options,
-                key=f"s{i}"
-            )
-            if selected_symptom != "-- Select a Symptom --":
-                user_syms.append(selected_symptom)
+        with cols[i % 4]:
+            with st.container(border=True):
+                selected_symptom = st.selectbox(
+                    f"Symptom {i+1}",
+                    symptom_options,
+                    key=f"s{i}"
+                )
+                if selected_symptom != "-- Select a Symptom --":
+                    user_syms.append(selected_symptom)
 
 # Prediction
 if st.button("Predict"):
@@ -199,7 +174,7 @@ if st.button("Predict"):
     # Main result — wrapped in a card so it doesn't look like bare text
     st.markdown(f"""
     <div class="result-card">
-        <h2 class="result-title">🩺 Prediction: {best_disease}</h2>
+        <h2 class="result-title">Prediction: {best_disease}</h2>
     </div>
     """, unsafe_allow_html=True)
 
@@ -218,6 +193,6 @@ if st.button("Predict"):
     #  Always show Top-3 list
     if len(results) > 1:
         st.write("---")
-        st.subheader("🔮 Top 3 Predictions")
+        st.subheader("Top 3 Predictions")
         for d, p in results:
             st.write(f"- {d}: {p:.2%}")
